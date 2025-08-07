@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Felicitochi</title>
+    <style>
+        body {
+            background: #1a237e; /* azul marino/índigo */
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #confetti-btn {
+            width: 64px;
+            height: 64px;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            outline: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Jelly animation initial state */
+            animation: none;
+        }
+        #confetti-btn svg {
+            width: 64px;
+            height: 64px;
+            display: block;
+            transition: filter 0.2s;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.15));
+        }
+        #confetti-btn:hover svg {
+            filter: drop-shadow(0 4px 16px #ffeaa7);
+            animation: jelly 0.5s;
+        }
+        #confetti-btn:active svg {
+            animation: jelly 0.5s;
+        }
+        @keyframes jelly {
+            0% { transform: scale(1,1); }
+            20% { transform: scale(1.25,0.75); }
+            40% { transform: scale(0.75,1.25); }
+            60% { transform: scale(1.15,0.85); }
+            80% { transform: scale(0.95,1.05); }
+            100% { transform: scale(1,1); }
+        }
+        @media (max-width: 600px) {
+            #confetti-btn {
+                width: 80px;
+                height: 80px;
+            }
+            #confetti-btn svg {
+                width: 80px;
+                height: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fondo de constelaciones y luna -->
+    <svg id="bg-sky" width="100vw" height="100vh" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none"></svg>
+    <button id="confetti-btn" title="¡Celebrar!">
+        <!-- Estrella SVG de 5 puntas con puntas redondeadas y ojos saltones centrados -->
+        <svg id="star-svg" viewBox="0 0 64 64" fill="#fdcb6e" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="32,10 38,25 54,25 41,36 46,52 32,43 18,52 23,36 10,25 26,25"
+                style="stroke:#e1b954;stroke-width:2;stroke-linejoin:round;stroke-linecap:round;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.15));"/>
+            <!-- Ojo izquierdo centrado -->
+            <ellipse id="eye-left" cx="26" cy="32" rx="5" ry="7" fill="#fff" />
+            <circle id="pupil-left" cx="26" cy="34" r="3.5" fill="#222" />
+            <!-- Ojo derecho centrado -->
+            <ellipse id="eye-right" cx="38" cy="32" rx="5" ry="7" fill="#fff" />
+            <circle id="pupil-right" cx="38" cy="34" r="3.5" fill="#222" />
+        </svg>
+    </button>
+    <script>
+        // Dibuja un corazón SVG como string
+        function getHeartSVG(color, size) {
+            return `<svg width="${size}" height="${size}" viewBox="0 0 32 32" fill="${color}" xmlns="http://www.w3.org/2000/svg" style="display:block">
+                <path d="M23.6,4.6c-2.1,0-4.1,1-5.6,2.6C16.1,5.6,14.1,4.6,12,4.6C8.1,4.6,5,7.7,5,11.6c0,7.1,11,14.8,11,14.8s11-7.7,11-14.8
+                C27,7.7,23.9,4.6,23.6,4.6z"/>
+            </svg>`;
+        }
+
+        function heartConfetti(x = window.innerWidth / 2, y = window.innerHeight / 2) {
+            const colors = ['#e17055', '#fd79a8', '#00b894', '#00cec9', '#fdcb6e', '#636e72'];
+            const numHearts = 32;
+            for (let i = 0; i < numHearts; i++) {
+                const heart = document.createElement('div');
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const size = Math.random() * 12 + 16; // 16-28px
+                heart.innerHTML = getHeartSVG(color, size);
+                heart.style.position = 'fixed';
+                heart.style.left = x + 'px';
+                heart.style.top = y + 'px';
+                heart.style.pointerEvents = 'none';
+                heart.style.zIndex = 9999;
+                heart.style.opacity = Math.random() * 0.5 + 0.5;
+                document.body.appendChild(heart);
+
+                // Ángulo hacia arriba (rango: -80° a -100° en radianes)
+                const angle = (Math.PI / 2) + (Math.random() * Math.PI / 3 - Math.PI / 6); // entre 60° y 120°
+                // Velocidad inicial más fuerte
+                const velocity = Math.random() * 300 + 600; // px/s
+                // Duración de la animación
+                const duration = Math.random() * 0.5 + 1.7; // 1.7s - 2.2s
+
+                // Movimiento parabólico/gravedad
+                const gravity = 1200; // px/s^2
+                const vx = Math.cos(angle) * velocity;
+                const vy = -Math.abs(Math.sin(angle) * velocity);
+
+                // Animación manual con requestAnimationFrame
+                let start = null;
+                function animateHeart(ts) {
+                    if (!start) start = ts;
+                    const elapsed = (ts - start) / 1000;
+                    const dx = vx * elapsed;
+                    const dy = vy * elapsed + 0.5 * gravity * elapsed * elapsed;
+                    heart.style.transform = `translate(${dx}px, ${dy}px) scale(${1 - elapsed / duration * 0.5}) rotate(${elapsed * 360}deg)`;
+                    heart.style.opacity = Math.max(0, 1 - (elapsed / duration));
+                    if (elapsed < duration) {
+                        requestAnimationFrame(animateHeart);
+                    } else {
+                        heart.remove();
+                    }
+                }
+                requestAnimationFrame(animateHeart);
+            }
+        }
+
+        // Eliminamos la declaración del contador flotante
+        // const counterValue = document.getElementById('counter-value');
+        // const counterDiv = document.getElementById('counter');
+
+        // Contador de pulsaciones se sigue llevando en confettiCount para la luna
+        let confettiCount = 0;
+
+        const btn = document.getElementById('confetti-btn');
+        btn.addEventListener('click', function(e) {
+            btn.querySelector('svg').style.animation = 'none';
+            void btn.offsetWidth;
+            btn.querySelector('svg').style.animation = 'jelly 0.5s';
+
+            const rect = e.target.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            heartConfetti(x, y);
+
+            confettiCount++;
+            updateMoonCounter();
+        });
+
+        // Ojos saltones que siguen al ratón (la pupila sigue hasta que la mitad se oculta por el borde del ojo)
+        const svg = document.getElementById('star-svg');
+        const pupilLeft = document.getElementById('pupil-left');
+        const pupilRight = document.getElementById('pupil-right');
+        // Centros y radios de los ojos
+        const eyeLeft = { cx: 26, cy: 33, rx: 5, ry: 7 };
+        const eyeRight = { cx: 38, cy: 33, rx: 5, ry: 7 };
+        const pupilRadius = 3.5;
+
+        // El máximo desplazamiento es el radio del ojo menos la mitad de la pupila
+        function getMaxDisplacement(rx, ry, pr) {
+            return { x: rx - pr * 0.5, y: ry - pr * 0.5 };
+        }
+
+        document.addEventListener('mousemove', function(e) {
+            const rect = svg.getBoundingClientRect();
+            // Coordenadas del ratón relativas al SVG
+            const mouseX = ((e.clientX - rect.left) / rect.width) * 64;
+            const mouseY = ((e.clientY - rect.top) / rect.height) * 64;
+
+            function calcPupil(eye) {
+                const dx = mouseX - eye.cx;
+                const dy = mouseY - eye.cy;
+                const max = getMaxDisplacement(eye.rx, eye.ry, pupilRadius);
+                // Normaliza el desplazamiento para que la pupila no sobresalga más de la mitad
+                let px = dx, py = dy;
+                if ((dx*dx)/(max.x*max.x) + (dy*dy)/(max.y*max.y) > 1) {
+                    const angle = Math.atan2(dy, dx);
+                    px = Math.cos(angle) * max.x;
+                    py = Math.sin(angle) * max.y;
+                }
+                return {
+                    x: eye.cx + px,
+                    y: eye.cy + py
+                };
+            }
+
+            const left = calcPupil(eyeLeft);
+            const right = calcPupil(eyeRight);
+
+            pupilLeft.setAttribute('cx', left.x);
+            pupilLeft.setAttribute('cy', left.y);
+            pupilRight.setAttribute('cx', right.x);
+            pupilRight.setAttribute('cy', right.y);
+        });
+
+        // --- FONDO DE LUNA (solo visible cuando duerme, con fade in y estrellas pixeladas y parallax) ---
+        let bgStars = [];
+        let bgStarsAnimId = null;
+        let cricketAudioCtx = null;
+        let cricketOscs = [];
+        let cricketGain = null;
+
+        function playCrickets() {
+            if (cricketAudioCtx) return; // Ya está sonando
+            cricketAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            cricketGain = cricketAudioCtx.createGain();
+            cricketGain.gain.value = 0.13;
+            cricketGain.connect(cricketAudioCtx.destination);
+
+            // Crea varios grillos con frecuencias y patrones diferentes (más agudo y pausado)
+            for (let i = 0; i < 3; i++) {
+                const osc = cricketAudioCtx.createOscillator();
+                const gain = cricketAudioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.value = 540 + i * 120 + Math.random() * 40; // Más agudo
+                gain.gain.value = 0;
+                osc.connect(gain).connect(cricketGain);
+                osc.start();
+
+                // Patrón de chirrido más pausado
+                function chirp() {
+                    if (!cricketAudioCtx) return;
+                    gain.gain.setValueAtTime(0, cricketAudioCtx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.13 / (i + 1), cricketAudioCtx.currentTime + 0.02);
+                    gain.gain.linearRampToValueAtTime(0, cricketAudioCtx.currentTime + 0.05 + Math.random() * 0.02);
+                    setTimeout(chirp, 350 + Math.random() * 120 + i * 80); // Más pausado
+                }
+                chirp();
+                cricketOscs.push({ osc, gain });
+            }
+        }
+
+        function stopCrickets() {
+            if (cricketOscs.length) {
+                cricketOscs.forEach(({ osc, gain }) => {
+                    try {
+                        gain.gain.setTargetAtTime(0, cricketAudioCtx.currentTime, 0.05);
+                        osc.stop(cricketAudioCtx.currentTime + 0.12);
+                    } catch {}
+                });
+            }
+            cricketOscs = [];
+            if (cricketGain) {
+                cricketGain.disconnect();
+                cricketGain = null;
+            }
+            if (cricketAudioCtx) {
+                setTimeout(() => {
+                    try { cricketAudioCtx.close(); } catch {}
+                    cricketAudioCtx = null;
+                }, 200);
+            }
+        }
+
+        function showSleepMoonAndStars() {
+            const svg = document.getElementById('bg-sky');
+            svg.innerHTML = '';
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            svg.setAttribute('width', w);
+            svg.setAttribute('height', h);
+
+            const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            group.setAttribute('id', 'sleep-moon-stars');
+            group.style.opacity = 0;
+            group.style.transition = 'opacity 1.2s';
+
+            const moonX = w - 120;
+            const moonY = 100;
+            const moon = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            moon.setAttribute('cx', moonX);
+            moon.setAttribute('cy', moonY);
+            moon.setAttribute('r', 48);
+            moon.setAttribute('fill', '#fffde7');
+            moon.setAttribute('opacity', '0.92');
+            group.appendChild(moon);
+
+            const moonShadow = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            moonShadow.setAttribute('cx', w - 105);
+            moonShadow.setAttribute('cy', 95);
+            moonShadow.setAttribute('r', 44);
+            moonShadow.setAttribute('fill', '#b0b6c7');
+            moonShadow.setAttribute('opacity', '0.18');
+            group.appendChild(moonShadow);
+
+            const moonCount = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            moonCount.setAttribute('id', 'moon-counter');
+            moonCount.setAttribute('x', moonX);
+            moonCount.setAttribute('y', moonY + 12);
+            moonCount.setAttribute('text-anchor', 'middle');
+            moonCount.setAttribute('font-size', '2.3rem');
+            moonCount.setAttribute('font-family', 'monospace');
+            moonCount.setAttribute('fill', '#222');
+            moonCount.setAttribute('opacity', '0.85');
+            moonCount.textContent = confettiCount;
+            group.appendChild(moonCount);
+
+            // Estrellas pixeladas (rectángulos pequeños) con parallax
+            bgStars = [];
+            for (let i = 0; i < 90; i++) {
+                const px = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                const size = Math.random() < 0.7 ? 2 : 3;
+                const x = Math.random() * w;
+                const y = Math.random() * h * 0.85;
+                px.setAttribute('x', x);
+                px.setAttribute('y', y);
+                px.setAttribute('width', size);
+                px.setAttribute('height', size);
+                px.setAttribute('fill', '#fff');
+                px.setAttribute('opacity', Math.random() * 0.5 + 0.5);
+                group.appendChild(px);
+                // Parallax: cada estrella tiene una velocidad y profundidad
+                bgStars.push({
+                    el: px,
+                    baseX: x,
+                    baseY: y,
+                    speed: 0.1 + Math.random() * 0.25,
+                    depth: 0.3 + Math.random() * 0.7
+                });
+            }
+            svg.appendChild(group);
+
+            // Oculta el contador flotante, solo deja el número en la luna
+            // counterDiv.style.display = 'none';
+
+            // Fade in
+            setTimeout(() => {
+                group.style.opacity = 1;
+            }, 10);
+
+            // Iniciar animación de estrellas
+            animateBgStars();
+        }
+
+        function hideSleepMoonAndStars() {
+            const svg = document.getElementById('bg-sky');
+            const group = document.getElementById('sleep-moon-stars');
+            if (group) {
+                group.style.opacity = 0;
+                setTimeout(() => {
+                    if (group.parentNode) group.parentNode.removeChild(group);
+                }, 400);
+            }
+            if (bgStarsAnimId) {
+                cancelAnimationFrame(bgStarsAnimId);
+                bgStarsAnimId = null;
+            }
+            bgStars = [];
+            // Se eliminan las líneas que vuelven a mostrar el contador flotante
+        }
+
+        function updateMoonCounter() {
+            const moonCounter = document.getElementById('moon-counter');
+            if (moonCounter) {
+                moonCounter.textContent = confettiCount;
+            }
+        }
+
+        // --- FONDO DE LUNA (inicial: oculto) ---
+        function drawBackgroundMoon() {
+            const svg = document.getElementById('bg-sky');
+            svg.innerHTML = '';
+            svg.setAttribute('width', window.innerWidth);
+            svg.setAttribute('height', window.innerHeight);
+            // No dibujar nada, la luna solo aparece cuando duerme
+        }
+        drawBackgroundMoon();
+        window.addEventListener('resize', () => {
+            if (!sleeping) drawBackgroundMoon();
+        });
+
+        // --- SUEÑO Y CONSTELACIONES ---
+        let sleepTimeout;
+        let sleeping = false;
+
+        // Elimina llamada a drawConstellations y removeConstellations, ya no se usan
+
+        function addSleepElements() {
+            const svg = document.getElementById('star-svg');
+            // Quita ojos normales
+            ['eye-left', 'eye-right', 'pupil-left', 'pupil-right'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
+            // Añade líneas horizontales como ojos cerrados
+            if (!document.getElementById('sleep-eye-left')) {
+                const lineLeft = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                lineLeft.setAttribute('id', 'sleep-eye-left');
+                lineLeft.setAttribute('x', 21);
+                lineLeft.setAttribute('y', 36);
+                lineLeft.setAttribute('width', 10);
+                lineLeft.setAttribute('height', 1.7);
+                lineLeft.setAttribute('rx', 1);
+                lineLeft.setAttribute('fill', '#222');
+                svg.appendChild(lineLeft);
+            }
+            if (!document.getElementById('sleep-eye-right')) {
+                const lineRight = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                lineRight.setAttribute('id', 'sleep-eye-right');
+                lineRight.setAttribute('x', 33);
+                lineRight.setAttribute('y', 36);
+                lineRight.setAttribute('width', 10);
+                lineRight.setAttribute('height', 1.7);
+                lineRight.setAttribute('rx', 1);
+                lineRight.setAttribute('fill', '#222');
+                svg.appendChild(lineRight);
+            }
+            // Zetas animadas (más grandes)
+            if (!document.getElementById('zzz-group')) {
+                const zGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                zGroup.setAttribute('id', 'zzz-group');
+                // Tres zetas en posiciones y tamaños diferentes
+                const zetas = [
+                    { x: 50, y: 10, size: 16, delay: 0 },
+                    { x: 58, y: 22, size: 12, delay: 0.5 },
+                    { x: 44, y: 22, size: 10, delay: 1 }
+                ];
+                zetas.forEach((z, i) => {
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.textContent = 'Z';
+                    text.setAttribute('x', z.x);
+                    text.setAttribute('y', z.y);
+                    text.setAttribute('fill', '#fff');
+                    text.setAttribute('font-size', z.size);
+                    text.setAttribute('font-family', 'Arial, sans-serif');
+                    text.setAttribute('opacity', '0.85');
+                    text.style.animation = `zzz-float 2s ${z.delay}s infinite`;
+                    zGroup.appendChild(text);
+                });
+                svg.appendChild(zGroup);
+            }
+            // Mostrar luna y estrellas pixeladas con fade in y parallax
+            showSleepMoonAndStars();
+            playCrickets();
+            sleeping = true;
+        }
+
+        function removeSleepElements() {
+            // Quita párpados, zetas, ojos dormidos y restaura ojos normales
+            ['sleep-eye-left', 'sleep-eye-right', 'zzz-group'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.remove();
+            });
+            ['eye-left', 'eye-right', 'pupil-left', 'pupil-right'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = '';
+            });
+            // Oculta luna y estrellas pixeladas
+            hideSleepMoonAndStars();
+            stopCrickets();
+            sleeping = false;
+        }
+
+        // --- ANIMACIÓN DE LAS ZETAS ---
+        // Animación de las zetas
+        const style = document.createElement('style');
+        style.textContent = `
+        @keyframes zzz-float {
+            0% { opacity: 0; transform: translateY(0) scale(1);}
+            10% { opacity: 0.8;}
+            60% { opacity: 0.8;}
+            100% { opacity: 0; transform: translateY(-18px) scale(1.15);}
+        }
+        `;
+        document.head.appendChild(style);
+
+        // Control de sueño
+        let sleepTimeoutHandle;
+        function resetSleepTimer() {
+            if (sleeping) {
+                removeSleepElements();
+                sleeping = false;
+            }
+            clearTimeout(sleepTimeoutHandle);
+            sleepTimeoutHandle = setTimeout(() => {
+                sleeping = true;
+                addSleepElements();
+            }, 5000);
+        }
+
+        // Eventos que "despiertan" la estrella
+        ['mousemove', 'mousedown', 'touchstart', 'keydown'].forEach(evt =>
+            document.addEventListener(evt, resetSleepTimer)
+        );
+        resetSleepTimer();
+    </script>
+</body>
+</html>
