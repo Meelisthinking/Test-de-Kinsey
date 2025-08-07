@@ -305,7 +305,7 @@
         // Compartir en X
         document.getElementById('share-x').addEventListener('click', function() {
             const text = getShareMessage();
-            const url = encodeURIComponent(window.location.href);
+            const url = window.location.href; // No codificar aquí
             const shareText = encodeURIComponent(`${text} ${url} #KinseyTest`);
             const shareUrl = `https://twitter.com/intent/tweet?text=${shareText}`;
             window.open(shareUrl, '_blank');
