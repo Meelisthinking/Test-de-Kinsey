@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Orientación Sexual - Escala de Kinsey</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #181a20;
+            color: #f5f6fa;
+        }
+        h1, h2, h3 {
+            text-align: center;
+            color: #00b894;
+        }
+        .intro {
+            background-color: #23262f;
+            color: #f5f6fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+            margin-bottom: 20px;
+            font-size: 1.05em;
+        }
+        .instructions, .results {
+            background-color: #23262f;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+            margin-bottom: 20px;
+        }
+        .question {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #23262f;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+        .question p {
+            margin: 0 0 10px;
+            font-weight: bold;
+            color: #00cec9;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .buttons button {
+            padding: 10px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            background-color: #353b48;
+            color: #f5f6fa;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            flex: 1;
+            max-width: 13%;
+        }
+        .buttons button:hover {
+            background-color: #636e72;
+        }
+        .buttons button.selected {
+            background-color: #00b894;
+            color: #181a20;
+        }
+        #submit {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 30px;
+            background-color: #e17055;
+            color: #f5f6fa;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #submit:hover {
+            background-color: #d35400;
+        }
+        .results {
+            display: none;
+        }
+        .results h3 {
+            color: #00b894;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #636e72;
+            background: #181a20;
+            color: #f5f6fa;
+            padding: 10px;
+            box-sizing: border-box;
+            resize: vertical;
+            max-width: 100%;
+        }
+        @media (max-width: 600px) {
+            .buttons button {
+                max-width: 100%;
+                margin: 5px 0;
+            }
+            textarea {
+                margin-top: 0;
+            }
+        }
+        #share-x {
+            background: #1da1f2 !important;
+            color: #fff !important;
+        }
+        #share-whatsapp {
+            background: #25d366 !important;
+            color: #fff !important;
+        }
+        #share-discord {
+            background: #5865F2 !important;
+            color: #fff !important;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test de Orientación Sexual - Escala de Kinsey</h1>
+    <div class="intro">
+        <strong>Introducción al Test de Orientación Sexual - Escala de Kinsey</strong><br>
+        Alfred Kinsey fue un biólogo y sexólogo estadounidense que revolucionó el estudio de la sexualidad humana en las décadas de 1940 y 1950. A través de sus investigaciones pioneras, publicadas en los informes <em>Sexual Behavior in the Human Male</em> (1948) y <em>Sexual Behavior in the Human Female</em> (1953), Kinsey desafió las nociones tradicionales de la sexualidad al proponer que esta no es binaria (heterosexual u homosexual), sino que existe en un espectro continuo. Su Escala de Kinsey, que va de 0 (exclusivamente heterosexual) a 6 (exclusivamente homosexual), con puntos intermedios que reflejan grados de bisexualidad, se convirtió en una herramienta fundamental para entender la diversidad de las orientaciones sexuales.<br><br>
+        Este test tiene sentido porque permite a las personas reflexionar sobre sus atracciones, comportamientos e identidades sexuales de manera no rígida, reconociendo que la sexualidad puede ser fluida y no encajar en categorías fijas. Basado en la Escala de Kinsey, el test ofrece una oportunidad para explorar dónde te sitúas en este espectro, fomentando la autorreflexión en un entorno privado y sin juicios. Aunque la escala no abarca todas las identidades modernas (como la asexualidad o la pansexualidad), sigue siendo relevante por su enfoque en la diversidad y la complejidad de la experiencia sexual humana.
+    </div>
+    <div class="instructions">
+        <h3>Instrucciones</h3>
+        <p>Este test te ayudará a reflexionar sobre tu orientación sexual según la Escala de Kinsey, que va de 0 (exclusivamente heterosexual) a 6 (exclusivamente homosexual). Responde las siguientes preguntas seleccionando una opción de 0 a 6, según tus atracciones, comportamientos o identidad sexual:</p>
+        <ul>
+            <li><strong>0</strong>: Exclusivamente heterosexual</li>
+            <li><strong>1</strong>: Predominantemente heterosexual, con atracciones homosexuales incidentales</li>
+            <li><strong>2</strong>: Predominantemente heterosexual, pero más que incidentalmente homosexual</li>
+            <li><strong>3</strong>: Igualmente heterosexual y homosexual (bisexual)</li>
+            <li><strong>4</strong>: Predominantemente homosexual, pero más que incidentalmente heterosexual</li>
+            <li><strong>5</strong>: Predominantemente homosexual, con atracciones heterosexuales incidentales</li>
+            <li><strong>6</strong>: Exclusivamente homosexual</li>
+        </ul>
+        <p>Este es un ejercicio de autorreflexión, no un diagnóstico. Tus respuestas son privadas.</p>
+    </div>
+
+    <div id="questions">
+        <div class="question" data-id="1">
+            <p>1. ¿Cómo describirías tus atracciones sexuales actuales hacia personas de tu mismo género y del género opuesto?</p>
+            <div class="buttons">
+                <button data-value="0">0</button>
+                <button data-value="1">1</button>
+                <button data-value="2">2</button>
+                <button data-value="3">3</button>
+                <button data-value="4">4</button>
+                <button data-value="5">5</button>
+                <button data-value="6">6</button>
+            </div>
+            <textarea placeholder="Reflexión opcional: Describe cómo percibes tus atracciones actuales."></textarea>
+        </div>
+        <div class="question" data-id="2">
+            <p>2. En el pasado, ¿has tenido experiencias sexuales o románticas con personas de tu mismo género o del género opuesto? Evalúa el balance de estas experiencias.</p>
+            <div class="buttons">
+                <button data-value="0">0</button>
+                <button data-value="1">1</button>
+                <button data-value="2">2</button>
+                <button data-value="3">3</button>
+                <button data-value="4">4</button>
+                <button data-value="5">5</button>
+                <button data-value="6">6</button>
+            </div>
+            <textarea placeholder="Reflexión opcional: ¿Qué experiencias pasadas han moldeado tu orientación sexual?"></textarea>
+        </div>
+        <div class="question" data-id="3">
+            <p>3. ¿Cómo te identificas en términos de orientación sexual (por ejemplo, heterosexual, bisexual, homosexual)?</p>
+            <div class="buttons">
+                <button data-value="0">0</button>
+                <button data-value="1">1</button>
+                <button data-value="2">2</button>
+                <button data-value="3">3</button>
+                <button data-value="4">4</button>
+                <button data-value="5">5</button>
+                <button data-value="6">6</button>
+            </div>
+            <textarea placeholder="Reflexión opcional: ¿Por qué elegiste esta etiqueta o posición en la escala?"></textarea>
+        </div>
+        <div class="question" data-id="4">
+            <p>4. ¿En qué medida tus fantasías sexuales incluyen a personas de tu mismo género, del género opuesto, o ambos?</p>
+            <div class="buttons">
+                <button data-value="0">0</button>
+                <button data-value="1">1</button>
+                <button data-value="2">2</button>
+                <button data-value="3">3</button>
+                <button data-value="4">4</button>
+                <button data-value="5">5</button>
+                <button data-value="6">6</button>
+            </div>
+            <textarea placeholder="Reflexión opcional: ¿Cómo influyen tus fantasías en tu percepción de tu orientación sexual?"></textarea>
+        </div>
+        <div class="question" data-id="5">
+            <p>5. ¿Cómo te sientes respecto a la posibilidad de tener relaciones sexuales o románticas con personas de ambos géneros en el futuro?</p>
+            <div class="buttons">
+                <button data-value="0">0</button>
+                <button data-value="1">1</button>
+                <button data-value="2">2</button>
+                <button data-value="3">3</button>
+                <button data-value="4">4</button>
+                <button data-value="5">5</button>
+                <button data-value="6">6</button>
+            </div>
+            <textarea placeholder="Reflexión opcional: ¿Qué factores (sociales, personales, etc.) influyen en tu apertura a estas posibilidades?"></textarea>
+        </div>
+    </div>
+
+    <button id="submit">Ver Resultados</button>
+
+    <div class="results" id="results">
+        <h3>Tus Resultados</h3>
+        <p id="score"></p>
+        <p id="interpretation"></p>
+        <h4>Tus Reflexiones</h4>
+        <div id="reflections"></div>
+        <div style="margin-top:15px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button id="share-x" style="background:#1da1f2;">Compartir en X</button>
+            <button id="share-whatsapp" style="background:#25d366;">Compartir en WhatsApp</button>
+            <button id="share-discord" style="background:#5865F2;">Compartir en Discord</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = document.querySelectorAll('.question');
+        const submitButton = document.getElementById('submit');
+        const resultsDiv = document.getElementById('results');
+        const scoreDiv = document.getElementById('score');
+        const interpretationDiv = document.getElementById('interpretation');
+        const reflectionsDiv = document.getElementById('reflections');
+
+        questions.forEach(question => {
+            const buttons = question.querySelectorAll('.buttons button');
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    buttons.forEach(btn => btn.classList.remove('selected'));
+                    button.classList.add('selected');
+                });
+            });
+        });
+
+        submitButton.addEventListener('click', () => {
+            let totalScore = 0;
+            let allAnswered = true;
+            let reflections = '';
+
+            questions.forEach(question => {
+                const selectedButton = question.querySelector('.buttons button.selected');
+                if (!selectedButton) {
+                    allAnswered = false;
+                    return;
+                }
+                totalScore += parseInt(selectedButton.getAttribute('data-value'));
+                const textarea = question.querySelector('textarea');
+                if (textarea.value.trim()) {
+                    reflections += `<p><strong>Pregunta ${question.getAttribute('data-id')}:</strong> ${textarea.value}</p>`;
+                }
+            });
+
+            if (!allAnswered) {
+                alert('Por favor, responde todas las preguntas antes de ver los resultados.');
+                return;
+            }
+
+            const averageScore = totalScore / questions.length;
+            scoreDiv.textContent = `Puntuación promedio en la Escala de Kinsey: ${averageScore.toFixed(1)}`;
+            let interpretation = '';
+            if (averageScore <= 0.5) {
+                interpretation = 'Tu orientación sexual se alinea con una heterosexualidad exclusiva (0 en la Escala de Kinsey). Tus atracciones, comportamientos y fantasías están orientados predominantemente hacia el género opuesto.';
+            } else if (averageScore <= 1.5) {
+                interpretation = 'Tu orientación sexual es predominantemente heterosexual, con atracciones homosexuales incidentales (1 en la Escala de Kinsey). Puedes haber tenido experiencias o fantasías ocasionales con personas de tu mismo género, pero tu orientación principal es heterosexual.';
+            } else if (averageScore <= 2.5) {
+                interpretation = 'Tu orientación sexual es predominantemente heterosexual, pero con una inclinación más significativa hacia el mismo género (2 en la Escala de Kinsey). Tus atracciones o experiencias muestran cierta bisexualidad, aunque con un sesgo heterosexual.';
+            } else if (averageScore <= 3.5) {
+                interpretation = 'Tu orientación sexual es bisexual, con atracciones similares hacia ambos géneros (3 en la Escala de Kinsey). Es probable que te sientas cómodo/a con la idea de relaciones con personas de cualquier género.';
+            } else if (averageScore <= 4.5) {
+                interpretation = 'Tu orientación sexual es predominantemente homosexual, pero con una inclinación más significativa hacia el género opuesto (4 en la Escala de Kinsey). Tus atracciones o experiencias muestran cierta bisexualidad, aunque con un sesgo homosexual.';
+            } else if (averageScore <= 5.5) {
+                interpretation = 'Tu orientación sexual es predominantemente homosexual, con atracciones heterosexuales incidentales (5 en la Escala de Kinsey). Puedes haber tenido experiencias o fantasías ocasionales con el género opuesto, pero tu orientación principal es homosexual.';
+            } else {
+                interpretation = 'Tu orientación sexual se alinea con una homosexualidad exclusiva (6 en la Escala de Kinsey). Tus atracciones, comportamientos y fantasías están orientados predominantemente hacia el mismo género.';
+            }
+            interpretationDiv.textContent = interpretation;
+            reflectionsDiv.innerHTML = reflections || '<p>No se proporcionaron reflexiones.</p>';
+
+            resultsDiv.style.display = 'block';
+            submitButton.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Mensaje corto y con gancho para compartir
+        function getShareMessage() {
+            const score = scoreDiv.textContent.match(/[\d.]+/);
+            return `¡Acabo de hacer el Test Kinsey y mi resultado fue ${score ? score[0] : ''}! ¿Te atreves a descubrir el tuyo? 👉`;
+        }
+
+        // Compartir en X
+        document.getElementById('share-x').addEventListener('click', function() {
+            const text = getShareMessage();
+            const url = encodeURIComponent(window.location.href);
+            const shareText = encodeURIComponent(`${text} ${url} #KinseyTest`);
+            const shareUrl = `https://twitter.com/intent/tweet?text=${shareText}`;
+            window.open(shareUrl, '_blank');
+        });
+
+        // Compartir en WhatsApp
+        document.getElementById('share-whatsapp').addEventListener('click', function() {
+            const text = getShareMessage();
+            const url = window.location.href;
+            const shareText = encodeURIComponent(`${text} ${url}`);
+            const shareUrl = `https://wa.me/?text=${shareText}`;
+            window.open(shareUrl, '_blank');
+        });
+
+        // Compartir en Discord
+        document.getElementById('share-discord').addEventListener('click', function() {
+            const text = getShareMessage();
+            const url = window.location.href;
+            const shareText = encodeURIComponent(`${text} ${url}`);
+            const shareUrl = `https://discord.com/channels/@me`;
+            // Copia el mensaje al portapapeles y avisa al usuario
+            navigator.clipboard.writeText(`${text} ${url}`).then(() => {
+                window.open(shareUrl, '_blank');
+                alert('¡Mensaje copiado! Pega el resultado en tu chat de Discord.');
+            });
+        });
+    </script>
+</body>
+</html>
